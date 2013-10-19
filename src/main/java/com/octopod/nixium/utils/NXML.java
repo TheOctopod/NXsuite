@@ -1,7 +1,6 @@
 
 package com.octopod.nixium.utils;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.Scanner;
@@ -10,7 +9,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 public class NXML {
 
@@ -24,7 +22,7 @@ public class NXML {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             this.xml = db.parse(new InputSource(new StringReader(text)));
-        }catch(IOException | ParserConfigurationException | SAXException e){}
+        }catch(Exception e){}
 
     }
     
