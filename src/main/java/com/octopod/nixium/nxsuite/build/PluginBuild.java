@@ -6,10 +6,12 @@ public abstract class PluginBuild {
     static private String using = "Jenkins";
     
     static public PluginBuild instance(String url){
-        if(using.equals("Jenkins")){
-            return new Jenkins(url);
+        switch(using){
+            case "Jenkins":
+                return new Jenkins(url);
+            default:
+                return null;
         }
-        return null;
     }
     
     //Gets all the avaliable builds from this website

@@ -140,9 +140,9 @@ public class PluginUpdater implements Listener{
             NWeb web = new NWeb(url);
             ReadableByteChannel bytes = web.getBytes();
             if(bytes == null){return false;}
-            FileOutputStream output = new FileOutputStream(path);
-            output.getChannel().transferFrom(bytes, 0, Long.MAX_VALUE);
-            output.close();
+            try (FileOutputStream output = new FileOutputStream(path)) {
+                output.getChannel().transferFrom(bytes, 0, Long.MAX_VALUE);
+            }
             
         }catch(Exception e){
             e.printStackTrace();
