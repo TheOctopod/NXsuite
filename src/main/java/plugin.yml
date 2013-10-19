@@ -1,0 +1,5 @@
+name: NXsuite
+main: com.octopod.nixium.nxsuite.NXsuite
+version: 0.1
+description: 'hello'
+commands:
