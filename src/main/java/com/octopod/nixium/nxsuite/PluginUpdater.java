@@ -2,8 +2,6 @@
 package com.octopod.nixium.nxsuite;
 
 import com.octopod.nixium.utils.NServer;
-import com.octopod.nixium.utils.NXML;
-import com.octopod.nixium.nxsuite.NXsuite;
 import com.octopod.nixium.nxsuite.build.PluginBuild;
 import com.octopod.nixium.utils.NWeb;
 import java.io.FileOutputStream;
@@ -45,11 +43,11 @@ public class PluginUpdater implements Listener{
                         break;
                     default:
                         PluginBuild xml = PluginBuild.instance("http://ci.nixium.com/view/Plugins%20and%20Backports/api/xml");
-                        String link = xml.getPluginLink(args[1]);
+                        String link = xml.getPluginLink(args[2]);
                         if(link == null){player.sendMessage("Plugin not found on this build site.");}
                         else{
                             
-                            String name = xml.correctPluginCase(args[1]);
+                            String name = xml.correctPluginCase(args[2]);
                             player.sendMessage("Downloading " + name + "...");
                             String path = name + ".jar"; //New File Path
                             boolean result = savePluginToFile(link, "plugins/" + path); //Saves link to the path
