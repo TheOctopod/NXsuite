@@ -19,11 +19,17 @@ public class NXML {
     public NXML(String website){
 
         try{
+        	
             URL url = new URL(website);
-            String text = new Scanner(url.openStream(), "UTF-8").useDelimiter("\\A").next();
+            
+            Scanner scanner = new Scanner(url.openStream(), "UTF-8");
+            String text = scanner.useDelimiter("\\A").next();
+            scanner.close();
+            
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
-            this.xml = db.parse(new InputSource(new StringReader(text)));
+            this.xml = db.parse(new InputSource(new StringReader(text))); 
+
         }catch(IOException | ParserConfigurationException | SAXException e){}
 
     }

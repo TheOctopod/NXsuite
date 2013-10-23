@@ -142,6 +142,7 @@ public class PluginControl {
 			if(names != null && names.containsKey(pluginName)){names.remove(pluginName);}
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 		
