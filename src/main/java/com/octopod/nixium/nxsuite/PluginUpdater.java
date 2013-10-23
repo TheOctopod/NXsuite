@@ -38,6 +38,25 @@ public class PluginUpdater implements Listener{
                 return;
             }
             
+            if(args[1].equalsIgnoreCase("load")){
+            	
+            	switch(args.length){
+            		case 2:
+            			player.sendMessage("/nxs load <plugin>");
+            			break;
+            		default:
+            			boolean result = PluginControl.loadPlugin(args[2]);
+            			if(result == true){
+            				player.sendMessage(pre + "Plugin loaded!");
+            			} else {
+            				player.sendMessage(pre + "Plugin failed to load!");
+            			}
+            			break;
+            	}
+            	
+            	return;
+            }
+            
             if(args[1].equalsIgnoreCase("unload")){
             	
             	switch(args.length){
