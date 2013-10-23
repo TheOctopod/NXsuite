@@ -2,12 +2,11 @@ package com.octopod.nixium.nxsuite.build;
 
 import java.io.File;
 
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.UnknownDependencyException;
 
-import com.octopod.nixium.utils.JarResources;
 import com.octopod.nixium.utils.NServer;
 
 public class PluginControl {
@@ -28,11 +27,14 @@ public class PluginControl {
     public static String getPluginFileName(String pluginName){
         
     	File[] filelist = new File("plugins/").listFiles();
+    	
     	for(File file:filelist){
     		
-    		if(getPluginName(file.getPath()).equalsIgnoreCase(pluginName)){
-    			return file.getPath();
-    		}
+    		try {
+	    		if(getPluginName(file.getPath()).equalsIgnoreCase(pluginName)){
+	    			return file.getPath();
+	    		}
+			} catch (Exception e) {}
     		
     	}
 
@@ -40,12 +42,11 @@ public class PluginControl {
         
     }
     
-    public static YamlConfiguration getPluginConfig(String path){
+    public static PluginDescriptionFile getPluginConfig(String path){
     	
-    	JarResources jar = new JarResources(path);
-    	YamlConfiguration yml = new YamlConfiguration();
     	try {
-    		yml.loadFromString(new String(jar.getResource("plugin.yml")));
+	    	File file = new File(path);
+	    	PluginDescriptionFile yml = NServer.getPlugin().getPluginLoader().getPluginDescription(file);
 			return yml;
 		} catch (Exception e) {
 			return null;
@@ -55,24 +56,24 @@ public class PluginControl {
     
     public static String getPluginVersion(String path){
     	
-    	YamlConfiguration yml = getPluginConfig(path);
+    	PluginDescriptionFile yml = getPluginConfig(path);
 
 		if(yml == null) {
 			return "0";
 		} else {
-			return yml.getString("version");
+			return yml.getVersion();
 		}
 		
     }
     
     public static String getPluginName(String path){
-    	
-    	YamlConfiguration yml = getPluginConfig(path);
+
+	    PluginDescriptionFile yml = getPluginConfig(path);
 
 		if(yml == null) {
-			return "0";
+			return "";
 		} else {
-			return yml.getString("name");
+			return yml.getName();
 		}
 		
     }
