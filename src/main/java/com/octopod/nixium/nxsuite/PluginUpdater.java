@@ -50,6 +50,7 @@ public class PluginUpdater implements Listener{
             			}else {
             				player.sendMessage(pre + "Plugin found @ " + path);
             			}
+            			break;
             	}
             	
             	
