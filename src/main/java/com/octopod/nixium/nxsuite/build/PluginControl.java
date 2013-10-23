@@ -134,7 +134,7 @@ public class PluginControl {
 			pluginsField.setAccessible(true);
 			plugins = (List<Plugin>) pluginsField.get(pluginManager);
 			
-			Field namesField = pluginManager.getClass().getDeclaredField("plugins");
+			Field namesField = pluginManager.getClass().getDeclaredField("lookupNames");
 			namesField.setAccessible(true);
 			names = (Map<String, Plugin>) namesField.get(pluginManager);
 			
