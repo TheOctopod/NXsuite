@@ -35,7 +35,25 @@ public class PluginUpdater implements Listener{
             if(args.length == 1){
                 
                 player.sendMessage(pre + "NXsuite " + NServer.getPlugin().getDescription().getVersion() + " by Octopod");
-                
+                return;
+            }
+            
+            if(args[1].equalsIgnoreCase("find")){
+            	switch(args.length){
+            		case 2:
+            			player.sendMessage("/nxs find <plugin>");
+            			break;
+            		default:
+            			String path = PluginControl.getPluginFileName(args[2]);
+            			if(path == null){
+            				player.sendMessage(pre + "No plugin found.");
+            			}else {
+            				player.sendMessage(pre + "Plugin found @ " + path);
+            			}
+            	}
+            	
+            	
+            	return;
             }
             
             if(args[1].equalsIgnoreCase("update")){

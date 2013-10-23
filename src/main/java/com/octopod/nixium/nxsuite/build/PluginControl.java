@@ -19,14 +19,14 @@ public class PluginControl {
         
     }
     
-    public String getPluginFileName(Plugin plugin){
+    public static String getPluginFileName(Plugin plugin){
         
         String[] path = plugin.getClass().getProtectionDomain().getCodeSource().getLocation().getFile().split("/");
         return path[path.length - 1];
         
     }
     
-    public String getPluginFileName(String pluginName){
+    public static String getPluginFileName(String pluginName){
         
     	File[] filelist = new File("plugins/").listFiles();
     	for(File file:filelist){
@@ -41,7 +41,7 @@ public class PluginControl {
         
     }
     
-    public YamlConfiguration getPluginConfig(String path){
+    public static YamlConfiguration getPluginConfig(String path){
     	
     	JarResources jar = new JarResources(path);
     	YamlConfiguration yml = new YamlConfiguration();
@@ -54,7 +54,7 @@ public class PluginControl {
     	
     }
     
-    public String getPluginVersion(String path){
+    public static String getPluginVersion(String path){
     	
     	YamlConfiguration yml = getPluginConfig(path);
 
@@ -66,7 +66,7 @@ public class PluginControl {
 		
     }
     
-    public String getPluginName(String path){
+    public static String getPluginName(String path){
     	
     	YamlConfiguration yml = getPluginConfig(path);
 
@@ -78,7 +78,7 @@ public class PluginControl {
 		
     }
 	
-	public boolean loadPlugin(String pluginName){
+	public static boolean loadPlugin(String pluginName){
 		
 		File file = new File(getPluginFileName(pluginName));
 		
