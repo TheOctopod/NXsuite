@@ -1,10 +1,14 @@
 package com.octopod.nixium.nxsuite.build;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
 
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.UnknownDependencyException;
 
 import com.octopod.nixium.utils.NServer;
@@ -26,7 +30,7 @@ public class PluginControl {
     
     public static String getPluginFileName(String pluginName){
         
-    	File[] filelist = new File("plugins/").listFiles();
+    	File[] filelist = new File("plugins").listFiles();
     	
     	for(File file:filelist){
     		
@@ -54,6 +58,13 @@ public class PluginControl {
     	
     }
     
+    //Get a plugin's version from a path or filename
+    
+    public static String getPluginVersion(Plugin plugin){
+    	
+    	return getPluginVersion(getPluginFileName(plugin));
+    }
+    
     public static String getPluginVersion(String path){
     	
     	PluginDescriptionFile yml = getPluginConfig(path);
@@ -64,6 +75,13 @@ public class PluginControl {
 			return yml.getVersion();
 		}
 		
+    }
+    
+    //Get a plugin's name from a path or filename
+    
+    public static String getPluginName(Plugin plugin){
+    	
+    	return getPluginName(getPluginFileName(plugin));
     }
     
     public static String getPluginName(String path){
@@ -77,6 +95,8 @@ public class PluginControl {
 		}
 		
     }
+    
+//Plugin Control Methods
 	
 	public static boolean loadPlugin(String pluginName){
 		
@@ -84,12 +104,49 @@ public class PluginControl {
 		
 		try {
 			NServer.getPlugin().getPluginLoader().loadPlugin(file);
-		} catch (UnknownDependencyException | InvalidPluginException e) {
+		} catch (Exception e) {
 			return false;
 		}
 		
 		return true;
 		
+	}
+	
+	public static boolean unloadPlugin(String pluginName){
+
+		Plugin found = null;
+		PluginManager pluginManager = NServer.getPlugin().getServer().getPluginManager();
+		List<Plugin> plugins;
+		Map<String, Plugin> names;
+		
+		for(Plugin plugin:getAllPlugins()){
+			if(plugin.getDescription().getName().equalsIgnoreCase(pluginName)){
+				found = plugin;
+				break;
+			}
+		}
+		
+		if(found == null){return false;}
+		
+		try {
+			
+			Field pluginsField = pluginManager.getClass().getDeclaredField("plugins");
+			pluginsField.setAccessible(true);
+			plugins = (List<Plugin>) pluginsField.get(pluginManager);
+			
+			Field namesField = pluginManager.getClass().getDeclaredField("plugins");
+			namesField.setAccessible(true);
+			names = (Map<String, Plugin>) namesField.get(pluginManager);
+			
+			if(plugins != null && plugins.contains(found)){plugins.remove(found);}
+			if(names != null && names.containsKey(pluginName)){names.remove(pluginName);}
+			
+		} catch (Exception e) {
+			return false;
+		}
+		
+		return true;
+
 	}
 
 }

@@ -38,21 +38,21 @@ public class PluginUpdater implements Listener{
                 return;
             }
             
-            if(args[1].equalsIgnoreCase("find")){
+            if(args[1].equalsIgnoreCase("unload")){
+            	
             	switch(args.length){
             		case 2:
-            			player.sendMessage("/nxs find <plugin>");
+            			player.sendMessage("/nxs unload <plugin>");
             			break;
             		default:
-            			String path = PluginControl.getPluginFileName(args[2]);
-            			if(path == null){
-            				player.sendMessage(pre + "No plugin found.");
-            			}else {
-            				player.sendMessage(pre + "Plugin found @ " + path);
+            			boolean result = PluginControl.unloadPlugin(args[2]);
+            			if(result == true){
+            				player.sendMessage(pre + "Plugin unloaded!");
+            			} else {
+            				player.sendMessage(pre + "Plugin failed to unload!");
             			}
             			break;
             	}
-            	
             	
             	return;
             }
