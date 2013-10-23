@@ -3,9 +3,12 @@ package com.octopod.nixium.nxsuite;
 
 import com.octopod.nixium.utils.NServer;
 import com.octopod.nixium.nxsuite.build.PluginBuild;
+import com.octopod.nixium.nxsuite.build.PluginControl;
 import com.octopod.nixium.utils.NWeb;
+
 import java.io.FileOutputStream;
 import java.nio.channels.ReadableByteChannel;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -97,7 +100,7 @@ public class PluginUpdater implements Listener{
             if(args[1].equalsIgnoreCase("scan")){
                 
                 PluginBuild xml = PluginBuild.instance("http://ci.nixium.com/view/Plugins%20and%20Backports/api/xml");
-                Plugin[] plugins = getAllPlugins();
+                Plugin[] plugins = PluginControl.getAllPlugins();
                 String[] list = new String[plugins.length];
                 for(int i = 0; i < plugins.length; i++){
                     if(xml.correctPluginCase(plugins[i].getName()) != null){
@@ -118,18 +121,6 @@ public class PluginUpdater implements Listener{
             
         }
         
-    }
-    
-    public Plugin[] getAllPlugins(){
-        
-        return NServer.getPlugin().getServer().getPluginManager().getPlugins();
-        
-    }
-    
-    public String getPluginFileName(Plugin plugin){
-        
-        String[] path = plugin.getClass().getProtectionDomain().getCodeSource().getLocation().getFile().split("/");
-        return path[path.length - 1];
     }
 
     public static boolean savePluginToFile(String url, String path){
