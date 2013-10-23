@@ -2,13 +2,12 @@ package com.octopod.nixium.nxsuite.build;
 
 import java.io.File;
 
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.UnknownDependencyException;
 
-import com.octopod.nixium.libraries.JarResources;
+import com.octopod.nixium.utils.JarResources;
 import com.octopod.nixium.utils.NServer;
 
 public class PluginControl {
@@ -48,7 +47,7 @@ public class PluginControl {
     	try {
     		yml.loadFromString(new String(jar.getResource("plugin.yml")));
 			return yml;
-		} catch (InvalidConfigurationException e) {
+		} catch (Exception e) {
 			return null;
 		}
     	
