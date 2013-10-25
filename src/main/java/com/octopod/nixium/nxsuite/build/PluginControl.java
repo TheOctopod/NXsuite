@@ -97,13 +97,25 @@ public class PluginControl {
     }
     
 //Plugin Control Methods
-	
+
+    private static Plugin getPlugin(String p) {
+        for (Plugin pl : NServer.getPlugin().getServer().getPluginManager().getPlugins()) {
+            if (pl.getDescription().getName().equalsIgnoreCase(p)) {
+                return pl;
+            }
+        }
+        return null;
+    }
+    
 	public static boolean loadPlugin(String pluginName){
 		
 		File file = new File(getPluginFileName(pluginName));
 		
 		try {
 			NServer.getPlugin().getPluginLoader().loadPlugin(file);
+			Plugin plugin = getPlugin(pluginName);
+			plugin.onLoad();
+			NServer.getPlugin().getPluginLoader().enablePlugin(plugin);
 		} catch (Exception e) {
 			return false;
 		}
