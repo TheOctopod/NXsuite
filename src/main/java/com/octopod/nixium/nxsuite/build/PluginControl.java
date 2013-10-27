@@ -116,9 +116,7 @@ public class PluginControl {
 			Plugin plugin = getPlugin(pluginName);
 			plugin.onLoad();
 			NServer.getPlugin().getPluginLoader().enablePlugin(plugin);
-
 			return true;
-
 		} catch (Exception e) {
 			return false;
 		}
