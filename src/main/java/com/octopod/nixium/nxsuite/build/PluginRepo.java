@@ -1,11 +1,16 @@
 
 package com.octopod.nixium.nxsuite.build;
 
-public abstract class PluginBuild {
+public abstract class PluginRepo {
     
+	static private String url = "ci.nixium.com";
     static private String using = "Jenkins";
     
-    static public PluginBuild instance(String url){
+    public static void setSource(String newUrl) {url = newUrl;}
+    public static String getSource() {return url;}
+      
+    static public PluginRepo instance(){return instance(url);}
+    static public PluginRepo instance(String url){
         switch(using){
             case "Jenkins":
                 return new Jenkins(url);
@@ -22,5 +27,5 @@ public abstract class PluginBuild {
     
     //Gets the latest plugin download link, given the plugin's name
     abstract public String getPluginLink(String pluginName);
-    
+
 }

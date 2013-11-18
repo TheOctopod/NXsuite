@@ -4,22 +4,29 @@ package com.octopod.nixium.utils;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+
 import javax.xml.parsers.*;
+
+import org.bukkit.ChatColor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-public class NXML {
+import com.octopod.nixium.nxsuite.NXsuite;
+
+public class XML {
 
     private Document xml;
     
-    public NXML(String website){
+    public XML(String website){
 
         try{
-        	
+
             URL url = new URL(website);
             
             Scanner scanner = new Scanner(url.openStream(), "UTF-8");
@@ -54,16 +61,16 @@ public class NXML {
     public String[] getTags(String tag, String filter){
 
         NodeList nodelist = this.xml.getElementsByTagName(tag);
-        String[] array = new String[0];
+        List<String> array = new ArrayList<String>();
         
         for(int i = 0; i < nodelist.getLength(); i++){
             Node node = nodelist.item(i);
             if(node.getParentNode().getNodeName().equals(filter)){
-                array = NArrays.push(array, node.getTextContent());
+                array.add(node.getTextContent());
             }
         }
         
-        return array;
+        return array.toArray(new String[array.size()]);
 
     }
  

@@ -1,13 +1,28 @@
 
 package com.octopod.nixium.nxsuite.build;
 
-import com.octopod.nixium.utils.NXML;
+import com.octopod.nixium.utils.XML;
 
-public class Jenkins extends PluginBuild{
+public class Jenkins extends PluginRepo{
 
-    private NXML api;
+    private XML api;
+    private String view = "";
     
-    public Jenkins(String url){this.api = new NXML(url);}
+    public Jenkins(String url){setView(view);}
+    
+    public void setView(String view){
+ 
+    	this.view = view.replace(" ", "%20");
+    	
+    	if(view.equalsIgnoreCase("")){
+    		this.api = new XML("http://" + getSource() + "/api/xml");
+    	}else {
+    		this.api = new XML("http://" + getSource() + "/view/" + view + "/api/xml");
+    	}
+    	
+    }
+    
+    public String getView(){return view;}
     
     @Override
     public String[] getAvaliableBuilds(){return api.getTags("name", "job");}
@@ -34,7 +49,7 @@ public class Jenkins extends PluginBuild{
         }
         if(link == null){return null;}
 
-        NXML buildPage = new NXML(link + "lastSuccessfulBuild/api/xml");
+        XML buildPage = new XML(link + "lastSuccessfulBuild/api/xml");
         String[] fileNames = buildPage.getTags("fileName");
         if(fileNames.length == 0){return null;}
         

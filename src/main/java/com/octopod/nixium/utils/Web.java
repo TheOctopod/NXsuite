@@ -7,12 +7,12 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
-public class NWeb {
+public class Web {
     
     private URL website;
     private boolean validURL;
     
-    public NWeb(String url){
+    public Web(String url){
         try{
             website = new URL(url);
             validURL = true;
