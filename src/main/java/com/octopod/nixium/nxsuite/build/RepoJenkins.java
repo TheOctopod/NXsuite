@@ -3,21 +3,22 @@ package com.octopod.nixium.nxsuite.build;
 
 import com.octopod.nixium.utils.XML;
 
-public class Jenkins extends PluginRepo{
-
+public class RepoJenkins{
+	
+	/* 
     private XML api;
     private String view = "";
     
-    public Jenkins(String url){setView(view);}
+    public Jenkins(){setView(view);}
     
     public void setView(String view){
  
     	this.view = view.replace(" ", "%20");
     	
     	if(view.equalsIgnoreCase("")){
-    		this.api = new XML("http://" + getSource() + "/api/xml");
+    		this.api = new XML("http://" + getRepo() + "/api/xml");
     	}else {
-    		this.api = new XML("http://" + getSource() + "/view/" + view + "/api/xml");
+    		this.api = new XML("http://" + getRepo() + "/view/" + view + "/api/xml");
     	}
     	
     }
@@ -28,14 +29,21 @@ public class Jenkins extends PluginRepo{
     public String[] getAvaliableBuilds(){return api.getTags("name", "job");}
     
     @Override
-    public String correctPluginCase(String pluginName){
-
+    public boolean getPluginExists(String pluginName){
+        String[] nameList = api.getTags("name", "job");
+        for(int i = 0; i < nameList.length; i++){
+            if(pluginName.toLowerCase().equals(nameList[i].toLowerCase())){return true;}
+        }
+        return false;
+    }
+    
+    @Override
+    public String getPluginName(String pluginName){
         String[] nameList = api.getTags("name", "job");
         for(int i = 0; i < nameList.length; i++){
             if(pluginName.toLowerCase().equals(nameList[i].toLowerCase())){return nameList[i];}
         }
-        return null;
-        
+        return pluginName;
     }
     
     @Override
@@ -56,5 +64,6 @@ public class Jenkins extends PluginRepo{
         return link + "lastSuccessfulBuild/artifact/target/" + buildPage.getTags("fileName")[0];
 
     }
+    */
     
 }

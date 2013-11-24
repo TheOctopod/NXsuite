@@ -2,15 +2,22 @@ package com.octopod.nixium.nxsuite;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.plugin.UnknownDependencyException;
 
 public class PluginControl {
@@ -33,7 +40,7 @@ public class PluginControl {
 	public final static int DISABLE_NONEXISTANT = 12;
 	
 	public static void resultMessage(Player player, int code) {
-		String pre = Commands.pre;
+		String pre = NXsuite.pre;
 		switch(code){
 		case PluginControl.SUCCESS:
 			player.sendMessage(pre + "Success!");
@@ -171,15 +178,18 @@ public class PluginControl {
 		String filename = getPluginFileName(pluginName);
 		if(filename == null) {return LOAD_NONEXISTANT;}
 		
+		PluginManager pm = NXsuite.getInstance().getServer().getPluginManager();
+		
 		File file = new File(filename);
 		if(getPlugin(pluginName) != null) {return LOAD_REPEAT_PLUGIN;}
 		
 		try {
 			
-			NXsuite.getInstance().getServer().getPluginManager().loadPlugin(file);
+			pm.loadPlugin(file);
 			Plugin plugin = getPlugin(pluginName);
 			plugin.onLoad();
-			NXsuite.getInstance().getServer().getPluginManager().enablePlugin(plugin);
+			pm.enablePlugin(plugin);
+			
 			return SUCCESS;
         } catch (UnknownDependencyException e) {
             return LOAD_MISSING_DEPENDANCY;
@@ -193,32 +203,74 @@ public class PluginControl {
 
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static int unloadPlugin(String pluginName){
-
+		
+		Map<Event, SortedSet<RegisteredListener>> listeners = null;
+		Field pluginsField;
 		Plugin plugin = getPlugin(pluginName);
 		if(plugin == null){return UNLOAD_NONEXISTANT;}
+		boolean reloadlisteners = true;
 		
 		PluginManager pm = NXsuite.getInstance().getServer().getPluginManager();
 
-			pm.disablePlugin(plugin);
+		pm.disablePlugin(plugin);
+		
+		
+		try {
 			
-			Field pluginsField;
-			try {
-				pluginsField = pm.getClass().getDeclaredField("plugins");
+			pluginsField = pm.getClass().getDeclaredField("plugins");
+			pluginsField.setAccessible(true);
+			List<Plugin> plugins = (List<Plugin>)pluginsField.get(pm);
+			
+			Field namesField = pm.getClass().getDeclaredField("lookupNames");
+			namesField.setAccessible(true);
+			Map<String, Plugin> names = (Map<String, Plugin>)namesField.get(pm);
+			
+            Field commandMapField = pm.getClass().getDeclaredField("commandMap");
+            commandMapField.setAccessible(true);
+            SimpleCommandMap cmdMap = (SimpleCommandMap) commandMapField.get(pm);
 
-				pluginsField.setAccessible(true);
-				List<Plugin> plugins = (List<Plugin>)pluginsField.get(pm);
-				
-				Field namesField = pm.getClass().getDeclaredField("lookupNames");
-				namesField.setAccessible(true);
-				Map<String, Plugin> names = (Map<String, Plugin>)namesField.get(pm);
-				
-				if(plugins != null && plugins.contains(plugin)){plugins.remove(plugin);}
-				if(names != null && names.containsKey(pluginName)){names.remove(pluginName);}
-				
-			} catch (Exception e) {
-				return FAILURE;
-			}
+            Field knownCommandsField = cmdMap.getClass().getDeclaredField("knownCommands");
+            knownCommandsField.setAccessible(true);
+            Map<String, Command> commands = (Map<String, Command>)knownCommandsField.get(cmdMap);
+            
+            try {
+                Field listenersField = pm.getClass().getDeclaredField("listeners");
+                listenersField.setAccessible(true);
+                listeners = (Map<Event, SortedSet<RegisteredListener>>) listenersField.get(pm);
+            } catch (Exception e) {
+                reloadlisteners = false;
+            }
+			
+			if(plugins != null && plugins.contains(plugin)){plugins.remove(plugin);}
+			if(names != null && names.containsKey(pluginName)){names.remove(pluginName);}
+			
+            if (listeners != null && reloadlisteners) {
+                for (SortedSet<RegisteredListener> set : listeners.values()) {
+                    for (Iterator<RegisteredListener> it = set.iterator(); it.hasNext(); ) {
+                        RegisteredListener value = it.next();
+                        if (value.getPlugin() == plugin) {it.remove();}
+                    }
+                }
+            }
+
+            if (cmdMap != null) {
+                for (Iterator<Map.Entry<String, Command>> it = commands.entrySet().iterator(); it.hasNext(); ) {
+                    Map.Entry<String, Command> entry = it.next();
+                    if (entry.getValue() instanceof PluginCommand) {
+                        PluginCommand c = (PluginCommand) entry.getValue();
+                        if (c.getPlugin() == plugin) {
+                            c.unregister(cmdMap);
+                            it.remove();
+                        }
+                    }
+                }
+            }
+			
+		} catch (Exception e) {
+			return FAILURE;
+		}
 			
 		return SUCCESS;
 

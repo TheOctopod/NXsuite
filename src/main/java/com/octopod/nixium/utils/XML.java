@@ -10,14 +10,11 @@ import java.util.Scanner;
 
 import javax.xml.parsers.*;
 
-import org.bukkit.ChatColor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import com.octopod.nixium.nxsuite.NXsuite;
 
 public class XML {
 
@@ -40,6 +37,8 @@ public class XML {
         }catch(IOException | ParserConfigurationException | SAXException e){}
 
     }
+    
+    public Document toDocument(){return xml;}
     
     //Returns array of tag contents matching 'tag'
     public String[] getTags(String tag){

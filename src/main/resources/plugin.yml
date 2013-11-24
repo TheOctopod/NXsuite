@@ -3,3 +3,36 @@ main: com.octopod.nixium.nxsuite.NXsuite
 version: 0.1
 description: 'hello'
 commands:
+    nxs:
+        description: Generic Command
+        usage: /<command>
+    nxsenable:
+        description: Enables a disabled plugin
+        usage: /<command> <plugin>
+    nxsdisable:
+        description: Disables an enabled plugin
+        usage: /<command> <plugin>
+    nxsreload:
+        description: Reloads a plugin
+        usage: /<command> <plugin>
+    nxsload:
+        description: Loads a plugin file
+        usage: /<command> <plugin>
+    nxsunload:
+        description: Unloads a loaded plugin
+        usage: /<command> <plugin>
+    nxsset:
+        description: Sets a field (pre plugin download)
+        usage: /<command> <field> <value>
+    nxslist:
+        description: Lists all avaliable plugins from this repo
+        usage: /<command> [page]
+    nxsscan:
+        description: Scans all loaded plugins for ones that can be updated
+        usage: /<command>
+    nxsget:
+        description: Downloads the plugin from the current repo
+        usage: /<command> <plugin>
+    nxsinfo:
+        description: Shows current download info
+        usage: /<command>
