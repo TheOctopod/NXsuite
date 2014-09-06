@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.octopod</groupId>
-  <artifactId>NXsuite</artifactId>
+  <artifactId>PluginSuite</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>NXsuite</name>
+  <name>PluginSuite</name>
   <url>http://maven.apache.org</url>
     <build>
         <plugins>
